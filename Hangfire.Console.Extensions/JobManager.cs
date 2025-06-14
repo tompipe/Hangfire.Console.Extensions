@@ -102,16 +102,16 @@ namespace Hangfire.Console.Extensions
         /// <summary>
         /// Starts a new job if we are running inside a job, it marks it as a child.
         /// </summary>
-        public void Start<TJob>([InstantHandle] [NotNull] Expression<Action<TJob>> methodCall)
+        public string Start<TJob>([InstantHandle] [NotNull] Expression<Action<TJob>> methodCall)
         {
             var context = performingContextAccessor.Get();
             if (context != null)
             {
-                backgroundJobClient.ContinueWith(context.BackgroundJob.Id, methodCall);
+                return backgroundJobClient.ContinueJobWith(context.BackgroundJob.Id, methodCall);
             }
             else
             {
-                backgroundJobClient.Enqueue(methodCall);
+                return backgroundJobClient.Enqueue(methodCall);
             }
         }
 
