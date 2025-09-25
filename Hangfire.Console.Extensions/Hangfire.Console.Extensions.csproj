@@ -13,8 +13,9 @@
     <RepositoryUrl>https://github.com/AnderssonPeter/Hangfire.Console.Extensions</RepositoryUrl>
     <RepositoryType>github</RepositoryType>
     <PackageTags>Hangfire Hangfire.Console</PackageTags>
-    <Version>2.0.0</Version>
+    <Version>2.1.0</Version>
     <PackageReleaseNotes>
+        For newer check: https://github.com/AnderssonPeter/Hangfire.Console.Extensions/releases
         2.0.0
         * Breaking change moved from Hangfire.Console to IdentityStream.Hangfire.Console
         1.2.0
