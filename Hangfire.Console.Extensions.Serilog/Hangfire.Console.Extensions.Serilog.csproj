@@ -9,39 +9,23 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <Description>Makes it easier to use Hangfire.Console with serilog</Description>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageProjectUrl>https://github.com/AnderssonPeter/Hangfire.Console.Extensions</PackageProjectUrl>
     <RepositoryUrl>https://github.com/AnderssonPeter/Hangfire.Console.Extensions</RepositoryUrl>
     <RepositoryType>github</RepositoryType>
     <PackageTags>Hangfire Hangfire.Console Serilog</PackageTags>
     <Version>2.1.0</Version>
-    <PackageReleaseNotes>
-        For newer check: https://github.com/AnderssonPeter/Hangfire.Console.Extensions/releases
-        2.0.0
-        * Breaking change moved from Hangfire.Console to IdentityStream.Hangfire.Console
-        1.2.0
-        * Upgraded package dependencies
-        1.1.0
-        * Added IRecurringJobManager.AddOrUpdateManuallyTriggered
-        * Added StartAndWaitAsync overload without result
-        * Fixed bug in StartAndWaitAsync (y-weiner found and fixed it)
-        1.0.3
-        * Include exception in the log output
-        1.0.2
-        * Added restrictedToMinimumLevel
-        * Upgraded dependencies
-        1.0.1.1
-        * Fixed bug introduced in last release.
-        1.0.1
-        * Fixed two bugs in HangfireConsoleSerilogEnricher.
-        1.0.0
-        * Initial release
-    </PackageReleaseNotes>
+    <PackageReleaseNotes>https://github.com/AnderssonPeter/Hangfire.Console.Extensions/releases</PackageReleaseNotes>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <ItemGroup>
     <None Include="..\LICENSE.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="..\README.md">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
