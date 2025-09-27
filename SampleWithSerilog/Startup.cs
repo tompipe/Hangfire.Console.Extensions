@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Hangfire;
 using Hangfire.Console;
 using Hangfire.Console.Extensions;
@@ -22,7 +18,7 @@ namespace SampleWithSerilog
         {
             services.AddHangfire((serviceProvider, configuration) => configuration
                 .UseConsole()
-                .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
                 .UseSimpleAssemblyNameTypeSerializer()
                 .UseRecommendedSerializerSettings()
                 //.UseSqlServerStorage(@"Server=(localdb)\MSSQLLocalDB;Integrated Security=true;"));
@@ -36,6 +32,7 @@ namespace SampleWithSerilog
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "ASP0016:Do not return a value from RequestDelegate", Justification = "<Pending>")]
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IJobManager jobManager, IRecurringJobManager recurringJobManager)
         {
             if (env.IsDevelopment())
@@ -51,17 +48,41 @@ namespace SampleWithSerilog
             {
                 endpoints.MapGet("/", async context =>
                 {
-                    await context.Response.WriteAsync("<a href=\"\\hangfire\\\">Dashboard</a>");
+                    await context.Response.WriteAsync("""
+                        <html>
+                        <body>
+                        <ul>
+                            <li><a href="\hangfire">Dashboard</a></li>
+                            <li><a target="_blank" href="\startAndWaitAsync">startAndWaitAsync</a></li>
+                            <li><a target="_blank" href="\startAndWait">startAndWait</a></li>
+                            <li><a target="_blank" href="\startAndWaitAsyncWithResult">startAndWaitAsyncWithResult</a></li>
+                            <li><a target="_blank" href="\startAndWaitWithResult">startAndWaitWithResult</a></li>
+                        <ul>
+                        </body>
+                        </html>
+                        """);
+
                 });
-                endpoints.MapGet("/startAndWait", async context =>
+                endpoints.MapGet("/startAndWaitAsync", async context =>
                 {
                     var jobManager = context.RequestServices.GetRequiredService<IJobManager>();
                     await jobManager.StartWaitAsync<ContinuationJob>(t => t.RunAsync());
                 });
+                endpoints.MapGet("/startAndWait", async context =>
+                {
+                    var jobManager = context.RequestServices.GetRequiredService<IJobManager>();
+                    await jobManager.StartWaitAsync<ContinuationJob>(t => t.Run());
+                });
+                endpoints.MapGet("/startAndWaitAsyncWithResult", async context =>
+                {
+                    var jobManager = context.RequestServices.GetRequiredService<IJobManager>();
+                    var result = await jobManager.StartWaitAsync<int, ContinuationJob>(t => t.RunWithReturnAsync());
+                    await context.Response.WriteAsync("Your lucky number might not be: " + result);
+                });
                 endpoints.MapGet("/startAndWaitWithResult", async context =>
                 {
                     var jobManager = context.RequestServices.GetRequiredService<IJobManager>();
-                    var result = await jobManager.StartWaitAsync<int, ResultJob>(t => t.RunAsync());
+                    var result = await jobManager.StartWaitAsync<int, ContinuationJob>(t => t.RunWithReturn());
                     await context.Response.WriteAsync("Your lucky number might not be: " + result);
                 });
             });

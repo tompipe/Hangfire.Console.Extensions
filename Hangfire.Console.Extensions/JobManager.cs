@@ -11,7 +11,6 @@ using Newtonsoft.Json;
 
 namespace Hangfire.Console.Extensions
 {
-
     public class JobManager : IJobManager
     {
         private readonly IMonitoringApi monitoringApi;
@@ -30,20 +29,18 @@ namespace Hangfire.Console.Extensions
         private readonly string[] runningStates = new[] { AwaitingState.StateName, EnqueuedState.StateName, ProcessingState.StateName };
 
         /// <inheritdoc />
-        public Task<TResult> StartWaitAsync<TResult, TJob>([InstantHandle, NotNull] Expression<Func<TJob, TResult>> methodCall, CancellationToken cancellationToken = default)
+        public Task<TResult> StartWaitAsync<TResult, TJob>([InstantHandle, NotNull] Expression<Action<TJob>> methodCall, CancellationToken cancellationToken = default)
         {
             var state = RetrieveContinuationJobState();
-            var method = (Expression<Func<TJob, Task>>)(object)methodCall;
-            var jobId = backgroundJobClient.Create(method, state);
+            var jobId = backgroundJobClient.Create(methodCall, state);
             return StartAndWaitAsync<TResult>(state, jobId, cancellationToken);
         }
 
         /// <inheritdoc />
-        public Task<TResult> StartWaitAsync<TResult, TJob>([InstantHandle, NotNull] Expression<Func<TJob, Task<TResult>>> methodCall, CancellationToken cancellationToken = default)
+        public Task<TResult> StartWaitAsync<TResult, TJob>([InstantHandle, NotNull] Expression<Func<TJob, Task>> methodCall, CancellationToken cancellationToken = default)
         {
             var state = RetrieveContinuationJobState();
-            var method = (Expression<Func<TJob, Task>>)(object)methodCall;
-            var jobId = backgroundJobClient.Create(method, state);
+            var jobId = backgroundJobClient.Create(methodCall, state);
             return StartAndWaitAsync<TResult>(state, jobId, cancellationToken);
         }
 

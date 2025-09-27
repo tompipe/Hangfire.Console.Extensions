@@ -12,12 +12,12 @@ namespace Hangfire.Console.Extensions
         /// <summary>
         /// Starts a new job and waits for its result
         /// </summary>
-        Task<TResult> StartWaitAsync<TResult, TJob>([InstantHandle, NotNull] Expression<Func<TJob, Task<TResult>>> methodCall, CancellationToken cancellationToken = default);
+        Task<TResult> StartWaitAsync<TResult, TJob>([InstantHandle, NotNull] Expression<Func<TJob, Task>> methodCall, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Starts a new job and waits for its result
         /// </summary>
-        Task<TResult> StartWaitAsync<TResult, TJob>([InstantHandle, NotNull] Expression<Func<TJob, TResult>> methodCall, CancellationToken cancellationToken = default);
+        Task<TResult> StartWaitAsync<TResult, TJob>([InstantHandle, NotNull] Expression<Action<TJob>> methodCall, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Starts a new job and wait for it to finish

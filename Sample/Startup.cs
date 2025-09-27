@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Hangfire;
 using Hangfire.Console;
 using Hangfire.Console.Extensions;
@@ -51,15 +48,26 @@ namespace Sample
                 {
                     await context.Response.WriteAsync("<a href=\"\\hangfire\\\">Dashboard</a>");
                 });
-                endpoints.MapGet("/startAndWait", async context =>
+                endpoints.MapGet("/startAndWaitAsync", async context =>
                 {
                     var jobManager = context.RequestServices.GetRequiredService<IJobManager>();
                     await jobManager.StartWaitAsync<ContinuationJob>(t => t.RunAsync());
                 });
-                endpoints.MapGet("/startAndWaitWithResult", async context =>
+                endpoints.MapGet("/startAndWait", async context =>
+                {
+                    var jobManager = context.RequestServices.GetRequiredService<IJobManager>();
+                    await jobManager.StartWaitAsync<ContinuationJob>(t => t.Run());
+                });
+                endpoints.MapGet("/startAndWaitAsyncWithResult", async context =>
                 {
                     var jobManager = context.RequestServices.GetRequiredService<IJobManager>();
                     var result = await jobManager.StartWaitAsync<int, ContinuationJob>(t => t.RunWithReturnAsync());
+                    await context.Response.WriteAsync("Your lucky number might not be: " + result);
+                });
+                endpoints.MapGet("/startAndWaitWithResult", async context =>
+                {
+                    var jobManager = context.RequestServices.GetRequiredService<IJobManager>();
+                    var result = await jobManager.StartWaitAsync<int, ContinuationJob>(t => t.RunWithReturn());
                     await context.Response.WriteAsync("Your lucky number might not be: " + result);
                 });
             });

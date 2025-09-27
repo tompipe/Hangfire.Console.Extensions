@@ -11,9 +11,17 @@ In .NET Core's Startup.cs:
 ```c#
 public void ConfigureServices(IServiceCollection services)
 {
+    services.AddHangfire((serviceProvider, configuration) => configuration
+        .UseConsole()
+        .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+        .UseSimpleAssemblyNameTypeSerializer()
+        .UseRecommendedSerializerSettings()
+        .UseMemoryStorage());
     services.AddHangfireConsoleExtensions();
+    services.AddHangfireServer();
 }
 ```
+
 
 ## Starting a job
 To start a job you can use the `IJobManager`, it will automatically check if you are currently inside a job, if that is the case it will mark the started job as a Continuation.
